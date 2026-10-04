@@ -1,28 +1,21 @@
 {
   "name": "hron-ts",
   "version": "2.1.0",
-  "description": "Human-readable cron — native TypeScript implementation",
+  "description": "Human-readable cron \u2014 native TypeScript implementation",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "rm -rf dist && tsc",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "typecheck:dist": "tsc -p test/types",
@@ -30,12 +23,11 @@
     "lint:fix": "biome check --write src/ test/"
   },
   "dependencies": {
-    "@js-temporal/polyfill": "^0.5.0"
+    "temporal-polyfill": "^1.0.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",
-    "tsup": "^8.0.0",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^5.0.2"
   },
   "license": "MIT",

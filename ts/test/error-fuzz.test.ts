@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { Temporal } from "@js-temporal/polyfill";
+import { Temporal } from "temporal-polyfill/implementation";
 import { expect, it } from "vitest";
 import { HronError, Schedule, type Span } from "../src/index.js";
 
