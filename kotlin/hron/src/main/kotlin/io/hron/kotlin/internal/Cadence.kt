@@ -7,13 +7,13 @@ import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
 internal class Cadence(
-    val unit: Unit,
+    val period: Period,
     private val origin: LocalDate,
     private val interval: Long,
     private val single: Boolean,
 ) {
-    /** [per400Years] units in 400 years, after which the proleptic Gregorian calendar repeats. */
-    enum class Unit(val per400Years: Long) {
+    /** [per400Years] periods in 400 years, after which the proleptic Gregorian calendar repeats. */
+    enum class Period(val per400Years: Long) {
         DAY(146_097),
         WEEK(20_871),
         MONTH(4_800),
@@ -21,19 +21,19 @@ internal class Cadence(
     }
 
     fun periodOf(date: LocalDate): Long =
-        when (unit) {
-            Unit.DAY -> ChronoUnit.DAYS.between(origin, date)
-            Unit.WEEK -> Math.floorDiv(ChronoUnit.DAYS.between(origin, date), 7L)
-            Unit.MONTH -> ChronoUnit.MONTHS.between(YearMonth.from(origin), YearMonth.from(date))
-            Unit.YEAR -> (date.year - origin.year).toLong()
+        when (period) {
+            Period.DAY -> ChronoUnit.DAYS.between(origin, date)
+            Period.WEEK -> Math.floorDiv(ChronoUnit.DAYS.between(origin, date), 7L)
+            Period.MONTH -> ChronoUnit.MONTHS.between(YearMonth.from(origin), YearMonth.from(date))
+            Period.YEAR -> (date.year - origin.year).toLong()
         }
 
     private fun startOf(k: Long): LocalDate =
-        when (unit) {
-            Unit.DAY -> origin.plusDays(k)
-            Unit.WEEK -> origin.plusWeeks(k)
-            Unit.MONTH -> origin.plusMonths(k)
-            Unit.YEAR -> origin.plusYears(k)
+        when (period) {
+            Period.DAY -> origin.plusDays(k)
+            Period.WEEK -> origin.plusWeeks(k)
+            Period.MONTH -> origin.plusMonths(k)
+            Period.YEAR -> origin.plusYears(k)
         }
 
     /**
@@ -80,7 +80,7 @@ internal class Cadence(
      * Aligned periods in lcm(400 years, interval units), after which both the calendar and the
      * alignment repeat.
      */
-    private fun horizonPeriods(): Long = unit.per400Years / gcd(unit.per400Years, interval)
+    private fun horizonPeriods(): Long = period.per400Years / gcd(period.per400Years, interval)
 
     companion object {
         /** Default anchor for week intervals (spec/README.md, "WeekRepeat epoch alignment"). */
@@ -109,26 +109,27 @@ internal class Cadence(
             when (expression) {
                 is ScheduleExpr.SingleDate ->
                     when (val date = expression.date) {
-                        is DateSpec.Iso -> Cadence(Unit.DAY, LocalDate.parse(date.date), 1, true)
-                        is DateSpec.Named -> repeating(Unit.YEAR, 1, starting)
+                        is DateSpec.Iso -> Cadence(Period.DAY, LocalDate.parse(date.date), 1, true)
+                        is DateSpec.Named -> repeating(Period.YEAR, 1, starting)
                     }
-                is ScheduleExpr.IntervalRepeat -> repeating(Unit.DAY, 1, starting)
-                is ScheduleExpr.DayRepeat -> repeating(Unit.DAY, expression.interval, starting)
-                is ScheduleExpr.WeekRepeat -> repeating(Unit.WEEK, expression.interval, starting)
-                is ScheduleExpr.MonthRepeat -> repeating(Unit.MONTH, expression.interval, starting)
-                is ScheduleExpr.YearRepeat -> repeating(Unit.YEAR, expression.interval, starting)
+                is ScheduleExpr.IntervalRepeat -> repeating(Period.DAY, 1, starting)
+                is ScheduleExpr.DayRepeat -> repeating(Period.DAY, expression.interval, starting)
+                is ScheduleExpr.WeekRepeat -> repeating(Period.WEEK, expression.interval, starting)
+                is ScheduleExpr.MonthRepeat ->
+                    repeating(Period.MONTH, expression.interval, starting)
+                is ScheduleExpr.YearRepeat -> repeating(Period.YEAR, expression.interval, starting)
             }
 
-        private fun repeating(unit: Unit, interval: Int, starting: LocalDate?): Cadence {
-            val anchor = starting ?: if (unit == Unit.WEEK) EPOCH_MONDAY else EPOCH_DATE
+        private fun repeating(period: Period, interval: Int, starting: LocalDate?): Cadence {
+            val anchor = starting ?: if (period == Period.WEEK) EPOCH_MONDAY else EPOCH_DATE
             val origin =
-                when (unit) {
-                    Unit.DAY -> anchor
-                    Unit.WEEK -> CalendarDates.mondayOf(anchor)
-                    Unit.MONTH -> anchor.withDayOfMonth(1)
-                    Unit.YEAR -> anchor.withDayOfYear(1)
+                when (period) {
+                    Period.DAY -> anchor
+                    Period.WEEK -> CalendarDates.mondayOf(anchor)
+                    Period.MONTH -> anchor.withDayOfMonth(1)
+                    Period.YEAR -> anchor.withDayOfYear(1)
                 }
-            return Cadence(unit, origin, interval.toLong(), false)
+            return Cadence(period, origin, interval.toLong(), false)
         }
 
         private tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)

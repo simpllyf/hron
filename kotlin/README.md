@@ -78,7 +78,7 @@ The sequences can be iterated more than once. Without a `between` bound, `occurr
 
 ### Parts
 
-The properties return the parts of the schedule: `ScheduleExpr` (`IntervalRepeat`, `DayRepeat`, `WeekRepeat`, `MonthRepeat`, `SingleDate`, `YearRepeat`), `DayFilter`, `MonthTarget`, `YearTarget`, `DayOfMonthSpec`, `DateSpec`, `ExceptionSpec`, `UntilSpec` and `TimeOfDay`, and the enums `Weekday`, `MonthName`, `OrdinalPosition`, `NearestDirection`, `IntervalUnit` and `ErrorKind`. The parts are sealed interfaces with data classes and data objects, so `when` over them is exhaustive. Only hron creates them, and the lists they hold are read-only.
+The properties return the parts of the schedule: `ScheduleExpr` (`IntervalRepeat`, `DayRepeat`, `WeekRepeat`, `MonthRepeat`, `SingleDate`, `YearRepeat`), `DayFilter`, `MonthTarget`, `YearTarget`, `DayOfMonthSpec`, `DateSpec`, `ExceptionSpec` and `UntilSpec`, the data class `TimeOfDay`, and the enums `Weekday`, `MonthName`, `OrdinalPosition`, `NearestDirection`, `IntervalUnit` and `ErrorKind`. The sealed interfaces hold data classes and data objects, so `when` over them is exhaustive. Only hron creates them, and the lists they hold are read-only.
 
 ```kotlin
 val parts = Schedule.parse(
@@ -170,7 +170,7 @@ A schedule is built only by `Schedule.parse` or `Schedule.fromCron`, so evaluati
 
 Names match in any case and display with the IANA capitalization: `in america/new_york` displays `in America/New_York`, a link keeps its own name (`in us/eastern` displays `in US/Eastern`), and `in utc` displays `in UTC`.
 
-`java.time` computes the offsets from the platform's tz data: the JDK's, or on Android the phone's, which Google Play keeps up to date. The names come from the same data, so a zone the platform knows matches however it is written, and a name it does not know is rejected.
+`java.time` computes the offsets from the platform's tz data: the JDK's, or on Android the phone's, which Google Play keeps up to date. The names come from the same data, so an `Area/Location` name the platform knows matches however it is written, and any other name is rejected.
 
 ## Platforms and toolchain
 

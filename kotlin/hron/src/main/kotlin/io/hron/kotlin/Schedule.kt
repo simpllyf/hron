@@ -4,6 +4,7 @@ import io.hron.kotlin.internal.Cron
 import io.hron.kotlin.internal.Display
 import io.hron.kotlin.internal.Evaluator
 import io.hron.kotlin.internal.Parser
+import io.hron.kotlin.internal.Search
 import java.time.ZonedDateTime
 import java.util.Objects
 
@@ -31,6 +32,9 @@ private constructor(
     /** The `during` months, empty without a `during` clause. */
     public val during: List<MonthName>,
 ) {
+    // Built on first use and kept, as every nextFrom, previousFrom and matches call needs it.
+    internal val search: Search by lazy { Search.of(this) }
+
     /** The next occurrence strictly after [now], or null if there is none. */
     public fun nextFrom(now: ZonedDateTime): ZonedDateTime? = Evaluator.nextFrom(this, now)
 

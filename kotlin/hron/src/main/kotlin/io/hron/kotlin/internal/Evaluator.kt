@@ -22,7 +22,7 @@ internal object Evaluator {
 
     fun occurrences(schedule: Schedule, from: ZonedDateTime): Sequence<ZonedDateTime> {
         if (!inSupportedRange(from)) return emptySequence()
-        val search = Search.of(schedule)
+        val search = schedule.search
         return generateSequence({ search.nearest(from, Direction.FORWARD) }) {
             search.nearest(it, Direction.FORWARD)
         }
@@ -43,7 +43,7 @@ internal object Evaluator {
      */
     fun matches(schedule: Schedule, datetime: ZonedDateTime): Boolean {
         if (!inSupportedRange(datetime)) return false
-        val search = Search.of(schedule)
+        val search = schedule.search
         val minute = datetime.withZoneSameInstant(search.zone).truncatedTo(ChronoUnit.MINUTES)
         // An occurrence never lands before the date it is scheduled on, so one at this minute is
         // scheduled on or before the minute's wall date.
@@ -63,6 +63,6 @@ internal object Evaluator {
         direction: Direction,
     ): ZonedDateTime? {
         if (!inSupportedRange(now)) return null
-        return Search.of(schedule).nearest(now, direction)
+        return schedule.search.nearest(now, direction)
     }
 }

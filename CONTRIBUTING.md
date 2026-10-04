@@ -17,7 +17,7 @@ Thanks for your interest in contributing to hron! This document covers everythin
   - Ruby 4.0+
   - .NET 10.0+
   - Swift 6.4+
-  - Kotlin: the JDK above; Gradle and the Kotlin compiler come from `kotlin/gradlew`. The Android tests also need the Android SDK and an emulator or device.
+  - Kotlin: the JDK above; Gradle and the Kotlin compiler come from `kotlin/gradlew`, and `just check-kotlin-client` fetches Kotlin 2.2 through mise. The Android tests also need the Android SDK and an emulator or device.
 
 On a Debian-family distro other than Ubuntu, such as Pop!_OS, mise needs to be told which Swift build to install. Set it in your own mise config (`~/.config/mise/config.toml`), not the repo's:
 
@@ -71,8 +71,8 @@ hron/
 ├── csharp/         # C#: native implementation
 ├── ruby/           # Ruby: native implementation
 ├── swift/          # Swift: native implementation
-├── Package.swift   # Swift package manifest (SwiftPM needs it at the root)
 ├── kotlin/         # Kotlin: native implementation (Gradle build, with Android tests)
+├── Package.swift   # Swift package manifest (SwiftPM needs it at the root)
 ├── justfile        # Build/test commands
 └── VERSION         # Single source of truth for version
 ```

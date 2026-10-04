@@ -24,14 +24,14 @@ internal object WallClock {
      * at the instant its gap ends, so keys never decrease in wall-clock order and one binary search
      * finds the slots on either side of an instant.
      */
-    class Slot(val key: Instant, val instant: ZonedDateTime?)
+    class Slot(val key: Instant, val time: ZonedDateTime?)
 
     fun slotOn(date: LocalDate, minute: Int, zone: ZoneId): Slot {
         val wallTime = date.atTime(minute / 60, minute % 60)
         val rules = zone.rules
         val offsets = rules.getValidOffsets(wallTime)
         if (offsets.isEmpty()) return Slot(rules.getTransition(wallTime).instant, null)
-        val instant = ZonedDateTime.ofLocal(wallTime, zone, offsets[0])
-        return Slot(instant.toInstant(), instant)
+        val time = ZonedDateTime.ofLocal(wallTime, zone, offsets[0])
+        return Slot(time.toInstant(), time)
     }
 }

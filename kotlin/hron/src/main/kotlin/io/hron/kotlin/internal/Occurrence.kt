@@ -62,7 +62,7 @@ internal data class Candidate(val date: LocalDate, val targetMonth: Month = date
  * scheduled date to `shift` dates after it ([DailyTimes.maxShiftDays]), and first passes keep
  * wall-clock order.
  */
-internal data class Occurrence(val instant: ZonedDateTime, val landing: LocalDate) {
+internal data class Occurrence(val time: ZonedDateTime, val landing: LocalDate) {
     companion object {
         /**
          * How many dates behind a date that has begun now's wall date can read: from the second

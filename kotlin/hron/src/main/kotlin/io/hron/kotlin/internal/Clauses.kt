@@ -24,7 +24,7 @@ internal data class Clauses(
     fun allows(candidate: Candidate): Boolean {
         val date = candidate.date
         return allowsMonth(candidate.targetMonth) &&
-            MonthDay.from(date) !in exceptMonthDays &&
+            (exceptMonthDays.isEmpty() || MonthDay.from(date) !in exceptMonthDays) &&
             date !in exceptDates &&
             (until == null || date <= until) &&
             (starting == null || date >= starting)

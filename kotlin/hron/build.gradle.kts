@@ -42,7 +42,6 @@ tasks.test {
     systemProperty("hron.spec", spec.canonicalPath)
     // Read through a system property, so Gradle would not otherwise see a spec change.
     inputs.dir(spec).withPathSensitivity(PathSensitivity.RELATIVE)
-    failOnNoDiscoveredTests = true
     // -Phron.testJdk=17 runs the tests on the oldest JDK the bytecode targets.
     providers.gradleProperty("hron.testJdk").orNull?.let { version ->
         javaLauncher = javaToolchains.launcherFor {

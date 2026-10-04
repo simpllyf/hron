@@ -20,8 +20,8 @@ java/             # Native Java implementation
 csharp/           # Native C# implementation
 ruby/             # Native Ruby implementation
 swift/            # Native Swift implementation
-Package.swift     # Swift package manifest, at the root because SwiftPM reads a git package's manifest only from there
 kotlin/           # Native Kotlin implementation (JVM and Android)
+Package.swift     # Swift package manifest, at the root because SwiftPM reads a git package's manifest only from there
 ```
 
 ## Code Style

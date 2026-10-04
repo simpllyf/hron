@@ -96,7 +96,7 @@ internal class Lexer private constructor(private val input: String) {
     private fun word(start: Int): Token {
         advanceWhile { isAsciiLetter(it) || isAsciiDigit(it) || it == '_' }
         val text = input.substring(start, pos)
-        return KEYWORDS[text.lowercase()] ?: throw error("unknown keyword '$text'", start)
+        return KEYWORDS[text.asciiLowercase()] ?: throw error("unknown keyword '$text'", start)
     }
 
     private fun digits(start: Int): Token {

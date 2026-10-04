@@ -60,8 +60,7 @@ private val CLAUSE_ORDER =
 internal class Parser
 private constructor(private val input: String, private val tokens: List<Token>) {
     private var pos = 0
-    private var untilStart = 0
-    private var untilEnd = 0
+    private var untilSpan: Span? = null
 
     private fun peek(): Token? = tokens.getOrNull(pos)
 
@@ -109,13 +108,13 @@ private constructor(private val input: String, private val tokens: List<Token>) 
         if (eat(TokenKind.EXCEPT)) except = parseExceptionList()
 
         if (at(TokenKind.UNTIL)) {
-            untilStart = advance().start
+            val untilStart = advance().start
             until =
                 when (val date = parseDate()) {
                     is DateSpec.Iso -> UntilSpec.Iso(date.date)
                     is DateSpec.Named -> UntilSpec.Named(date.month, date.day)
                 }
-            untilEnd = previous().end
+            untilSpan = Lexer.span(input, untilStart, previous().end)
         }
 
         if (eat(TokenKind.STARTING)) {
@@ -164,7 +163,7 @@ private constructor(private val input: String, private val tokens: List<Token>) 
         val date = "${until.month.short} ${until.day}"
         throw HronException.parse(
             "until $date has no year: add a starting date, or use an ISO date",
-            Lexer.span(input, untilStart, untilEnd),
+            untilSpan!!,
             input,
             "until $date starting YYYY-MM-DD",
         )

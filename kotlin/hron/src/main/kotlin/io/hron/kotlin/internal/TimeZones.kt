@@ -16,11 +16,8 @@ internal object TimeZones {
         // Timezone names are ASCII; Unicode lowercasing would map a Kelvin sign to k.
         if (name.any { it.code >= 128 }) return null
         val lowercase = name.lowercase()
-        if (
-            lowercase != "utc" && ('/' !in name || REJECTED_AREAS.any { lowercase.startsWith(it) })
-        ) {
-            return null
-        }
-        return available[lowercase]
+        val wellFormed =
+            lowercase == "utc" || ('/' in lowercase && REJECTED_AREAS.none(lowercase::startsWith))
+        return if (wellFormed) available[lowercase] else null
     }
 }

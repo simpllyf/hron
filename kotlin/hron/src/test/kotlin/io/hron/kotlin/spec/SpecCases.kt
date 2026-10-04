@@ -244,18 +244,19 @@ class SpecCases(testsJson: String) {
         val rules = invariants["rules"].fieldNameList
         return invariants["tests"].flatMap { case ->
             val name = "invariants/${case["name"].asText()}"
+            val expression = case["expression"]?.asText()
             rules.map { rule ->
-                SpecCase("$name/$rule") {
+                SpecCase("$name/$rule", expression) {
                     case.assertKnownFields(setOf("expression", "now"), name)
                     val check =
                         INVARIANTS[rule] ?: throw AssertionError("rule not implemented: $rule")
-                    val expression = case.text("expression", name)
+                    val text = case.text("expression", name)
                     check(
                         Invariant(
-                            Schedule.parse(expression),
+                            Schedule.parse(text),
                             parseTimestamp(case.text("now", name)),
                             count,
-                            "$name ($expression) $rule",
+                            "$name ($text) $rule",
                         )
                     )
                 }

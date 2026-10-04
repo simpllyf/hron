@@ -11,6 +11,7 @@ import io.hron.kotlin.NearestDirection
 import io.hron.kotlin.OrdinalPosition
 import io.hron.kotlin.Schedule
 import io.hron.kotlin.ScheduleExpr
+import io.hron.kotlin.Span
 import io.hron.kotlin.UntilSpec
 import io.hron.kotlin.Weekday
 import io.hron.kotlin.YearTarget
@@ -160,7 +161,9 @@ fun main() {
         println(e.displayRich())
     }
     check(
-        HronException.cron("m").kind == ErrorKind.CRON &&
+        HronException.lex("m", Span(0, 1), "x").kind == ErrorKind.LEX &&
+            HronException.parse("m", Span(0, 1), "x", "y").suggestion == "y" &&
+            HronException.cron("m").kind == ErrorKind.CRON &&
             HronException.eval("m").kind == ErrorKind.EVAL
     )
 }

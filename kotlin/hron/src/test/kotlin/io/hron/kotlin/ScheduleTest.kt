@@ -120,9 +120,12 @@ class ScheduleTest {
     }
 
     @Test
-    fun iteratingTwiceGivesTheSameOccurrences() {
-        val occurrences = daily.occurrences(epoch).take(3)
-        assertEquals(occurrences.toList(), occurrences.toList())
+    fun occurrencesAreLazyAndCanBeIteratedTwice() {
+        var computed = 0
+        val occurrences = daily.occurrences(epoch).onEach { computed++ }
+        assertEquals(0, computed)
+        assertEquals(occurrences.take(2).toList(), occurrences.take(2).toList())
+        assertEquals(4, computed)
     }
 
     @Test
@@ -132,15 +135,6 @@ class ScheduleTest {
         assertEquals(0, computed)
         assertEquals(window.take(2).toList(), window.take(2).toList())
         assertEquals(4, computed)
-    }
-
-    @Test
-    fun occurrencesAreComputedOnlyWhenAsked() {
-        var computed = 0
-        val occurrences = daily.occurrences(epoch).onEach { computed++ }
-        assertEquals(0, computed)
-        occurrences.take(2).toList()
-        assertEquals(2, computed)
     }
 
     @Test

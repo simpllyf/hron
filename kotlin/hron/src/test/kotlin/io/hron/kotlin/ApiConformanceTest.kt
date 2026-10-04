@@ -177,7 +177,6 @@ class ApiConformanceTest {
                 },
         )
 
-    /** Each member api.json lists, as `group.list.name`. */
     private fun members(api: JsonNode): List<String> = LISTS.flatMap { (group, list) ->
         api[group][list].map {
             "$group.$list.${if (it.isTextual) it.asText() else it["name"].asText()}"

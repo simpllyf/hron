@@ -147,8 +147,8 @@ class PartsTest {
         )
         val factories =
             Schedule.Companion::class.java.declaredMethods.filter {
-                it.returnType == Schedule::class.java && it.name.startsWith("of")
+                it.returnType == Schedule::class.java && it.name !in setOf("parse", "fromCron")
             }
-        assertTrue(factories.all { it.isSynthetic }, "$factories")
+        assertTrue(factories.isNotEmpty() && factories.all { it.isSynthetic }, "$factories")
     }
 }

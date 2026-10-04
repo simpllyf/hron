@@ -49,7 +49,6 @@ jobs:
           install_args: java just
       - uses: gradle/actions/setup-gradle@v6
         with:
-          # The MIT-licensed caching; the default "enhanced" one is proprietary.
           cache-provider: basic
       - name: Build
         run: just build-kotlin
@@ -71,7 +70,6 @@ jobs:
           install_args: java java@temurin-17 just
       - uses: gradle/actions/setup-gradle@v6
         with:
-          # The MIT-licensed caching; the default "enhanced" one is proprietary.
           cache-provider: basic
       - name: Test
         run: just test-kotlin-17 "$(mise where java@temurin-17)"
@@ -88,7 +86,6 @@ jobs:
           install_args: java just
       - uses: gradle/actions/setup-gradle@v6
         with:
-          # The MIT-licensed caching; the default "enhanced" one is proprietary.
           cache-provider: basic
       - name: Build and run the client
         run: just check-kotlin-client
@@ -120,7 +117,6 @@ jobs:
           install_args: java just
       - uses: gradle/actions/setup-gradle@v6
         with:
-          # The MIT-licensed caching; the default "enhanced" one is proprietary.
           cache-provider: basic
       # The runner image ships the Android SDK and its command-line tools, so no setup action.
       - name: Accept the Android SDK licenses

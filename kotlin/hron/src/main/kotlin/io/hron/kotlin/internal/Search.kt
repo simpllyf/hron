@@ -43,13 +43,13 @@ private constructor(
                 ) {
                     continue
                 }
-                val instant = nearestOnDate(candidate.date, local, direction) ?: continue
-                if (found == null || direction.precedes(instant, found.instant)) {
-                    best = Occurrence(instant, instant.toLocalDate())
+                val time = nearestOnDate(candidate.date, local, direction) ?: continue
+                if (found == null || direction.precedes(time, found.time)) {
+                    best = Occurrence(time, time.toLocalDate())
                 }
             }
         }
-        return best?.instant?.takeIf(Evaluator::inSupportedRange)
+        return best?.time?.takeIf(Evaluator::inSupportedRange)
     }
 
     /**
@@ -57,7 +57,7 @@ private constructor(
      * rejects holds nothing.
      */
     private fun rejectsPeriod(start: LocalDate): Boolean =
-        (cadence.unit == Cadence.Unit.DAY || cadence.unit == Cadence.Unit.MONTH) &&
+        (cadence.period == Cadence.Period.DAY || cadence.period == Cadence.Period.MONTH) &&
             !clauses.allowsMonth(start.month)
 
     private fun nearestOnDate(date: LocalDate, now: ZonedDateTime, direction: Direction) =
@@ -111,7 +111,7 @@ private constructor(
         val step = direction.sign.toInt()
         var i = if (direction == Direction.FORWARD) low else low - 1
         while (i in slots.indices) {
-            WallClock.slotOn(date, slots[i], zone).instant?.let {
+            WallClock.slotOn(date, slots[i], zone).time?.let {
                 return it
             }
             i += step
