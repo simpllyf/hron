@@ -12,7 +12,7 @@
     "hron-wasm": "^2.1.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.1",
     "vite-plugin-wasm": "^3.6.0",
     "wrangler": "^4.143.1"

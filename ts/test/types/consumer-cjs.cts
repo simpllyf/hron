@@ -1,4 +1,4 @@
-// Same checks as consumer.ts, resolved through the package's require condition.
+// Same checks as consumer.ts, from CommonJS, which loads the ESM build with require().
 import {
   type DateSpec,
   type DayFilter,
