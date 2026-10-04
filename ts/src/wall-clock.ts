@@ -1,7 +1,7 @@
 // A wall time a fall-back repeats takes its first pass (spec/README.md, "DST
 // fall-back (ambiguous times)").
 
-import { Temporal } from "@js-temporal/polyfill";
+import { Temporal } from "temporal-polyfill/implementation";
 import type { TimeOfDay } from "./ast.js";
 
 export const MINUTES_PER_HOUR = 60;

@@ -1,4 +1,4 @@
-import { Temporal } from "@js-temporal/polyfill";
+import { Temporal } from "temporal-polyfill/implementation";
 import { describe, expect, it } from "vitest";
 import { Schedule } from "../src/index.js";
 

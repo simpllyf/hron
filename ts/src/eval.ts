@@ -1,4 +1,4 @@
-import type { Temporal } from "@js-temporal/polyfill";
+import type { Temporal } from "temporal-polyfill/implementation";
 import type { ScheduleData, ScheduleExpr, UntilSpec } from "./ast.js";
 import { monthNumber, weekdayNumber } from "./ast.js";
 import {
@@ -18,7 +18,7 @@ import {
 import { DAY_MS, MINUTES_PER_HOUR, minuteOfDay, Zone } from "./wall-clock.js";
 
 type ZDT = Temporal.ZonedDateTime;
-type Timestamp = Temporal.ZonedDateTime | Temporal.Instant;
+type Timestamp = { readonly epochNanoseconds: bigint };
 type IntervalRepeat = Extract<ScheduleExpr, { type: "intervalRepeat" }>;
 
 /** Default anchor for week intervals (spec/README.md, "WeekRepeat epoch alignment"). */

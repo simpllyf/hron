@@ -8,8 +8,8 @@ export default defineConfig({
     // getters.test.ts imports hron-ts from its source, whose own dependencies
     // are not installed in this job.
     alias: {
-      "@js-temporal/polyfill": fileURLToPath(
-        new URL("./node_modules/@js-temporal/polyfill", import.meta.url),
+      "temporal-polyfill": fileURLToPath(
+        new URL("./node_modules/temporal-polyfill", import.meta.url),
       ),
     },
   },

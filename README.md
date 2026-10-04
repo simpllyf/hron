@@ -53,7 +53,7 @@ See [`hron-cli`](rust/hron-cli/) for all options.
 | Swift | [`Hron`](swift/) | [![Swift Package Index](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fsimpllyf%2Fhron%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/simpllyf/hron) |
 | Kotlin | [`hron-kotlin`](kotlin/) | [![Maven Central](https://img.shields.io/maven-central/v/io.hron/hron-kotlin)](https://central.sonatype.com/artifact/io.hron/hron-kotlin) |
 
-> **Note:** The JS/TS native package (`hron-ts`) uses the [Temporal API](https://tc39.es/proposal-temporal/) via polyfill. Once Temporal ships natively in runtimes, performance improves automatically. For performance-critical JS/TS use cases, consider the WASM package (`hron-wasm`).
+> **Note:** The JS/TS native package (`hron-ts`) computes with the [Temporal API](https://tc39.es/proposal-temporal/) from a bundled polyfill, in every runtime, so its answers do not depend on the engine. For performance-critical JS/TS use cases, consider the WASM package (`hron-wasm`).
 
 ## Library Usage
 

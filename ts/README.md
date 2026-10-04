@@ -8,6 +8,8 @@ Native TypeScript implementation of [hron](https://github.com/simpllyf/hron) —
 npm install hron-ts
 ```
 
+The package is ESM only. CommonJS code can still `require("hron-ts")` on Node 20.19+ and 22.12+, which load ESM with `require()`.
+
 ## Usage
 
 ```typescript
@@ -112,7 +114,7 @@ Schedule.parse("every day at 09:00").equals(null); // false
 
 ## Timestamps
 
-Every method takes a `Temporal.ZonedDateTime` or a `Temporal.Instant`, either the polyfill's (exported as `Temporal`) or the engine's native one, and returns `Temporal.ZonedDateTime`. Only the instant counts, not the zone it is written in, and every result is in the schedule's timezone, or UTC when it has none:
+Every method takes a `Temporal.ZonedDateTime` or a `Temporal.Instant` from any Temporal implementation (the one this package exports as `Temporal`, another polyfill, or the engine's native one), and returns `Temporal.ZonedDateTime`. Only the instant counts, not the zone it is written in, and every result is in the schedule's timezone, or UTC when it has none:
 
 ```typescript
 const tokyo = Temporal.ZonedDateTime.from("2026-02-06T21:00:00+09:00[Asia/Tokyo]");
@@ -198,7 +200,7 @@ try {
 
 ## Temporal Polyfill
 
-This package uses the [Temporal API](https://tc39.es/proposal-temporal/) via `@js-temporal/polyfill`. The accepted timezone names follow the JS engine's Intl/ICU data, so a name IANA has removed may still be accepted. For performance-critical use cases, consider the WASM package (`hron-wasm`).
+This package computes with the [Temporal API](https://tc39.es/proposal-temporal/) from [`temporal-polyfill`](https://github.com/fullcalendar/temporal-polyfill), about 19 kB gzipped. It uses that implementation in every runtime, even one with native Temporal, so its answers do not depend on the engine. The accepted timezone names follow the engine's Intl/ICU data, so a name IANA has removed may still be accepted. For performance-critical use cases, consider the WASM package (`hron-wasm`).
 
 ## Tests
 

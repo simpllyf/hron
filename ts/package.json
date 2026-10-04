@@ -23,7 +23,7 @@
     "lint:fix": "biome check --write src/ test/"
   },
   "dependencies": {
-    "@js-temporal/polyfill": "^0.5.0"
+    "temporal-polyfill": "^1.0.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",

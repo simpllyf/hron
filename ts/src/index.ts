@@ -1,4 +1,4 @@
-import type { Temporal } from "@js-temporal/polyfill";
+import type { Temporal } from "temporal-polyfill/implementation";
 import type {
   Exception,
   MonthName,
@@ -19,15 +19,17 @@ import {
 } from "./eval.js";
 import { parse } from "./parser.js";
 
-type Timestamp = Temporal.ZonedDateTime | Temporal.Instant;
+// Only the instant is read, so the ZonedDateTime or Instant of any Temporal
+// implementation type-checks: each declares its own, mutually unassignable types.
+type Timestamp = { readonly epochNanoseconds: bigint };
 
 /** `private` binds only the compiler, so JavaScript could otherwise call `new Schedule(parts)`. */
 const BUILDER = Symbol("Schedule builder");
 
 /**
  * Every timestamp argument must be a `Temporal.ZonedDateTime` or a
- * `Temporal.Instant`, native or polyfill, or the method throws a `TypeError`
- * when called; only its instant matters. Every returned timestamp is a
+ * `Temporal.Instant` from any Temporal implementation, or the method throws a
+ * `TypeError` when called; only its instant matters. Every returned timestamp is a
  * `Temporal.ZonedDateTime` in the schedule's timezone, or UTC when it has none.
  *
  * Built only through `Schedule.parse` and `Schedule.fromCron`; a schedule
@@ -223,7 +225,7 @@ function timestamp(value: unknown, name: string): Timestamp {
   return value as Timestamp;
 }
 
-export { Temporal } from "@js-temporal/polyfill";
+export { Temporal } from "temporal-polyfill/implementation";
 export type {
   DateSpec,
   DayFilter,
