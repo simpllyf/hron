@@ -10,7 +10,21 @@ import tokenize
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SLASH = {".rs", ".ts", ".tsx", ".js", ".mjs", ".jsx", ".go", ".java", ".cs", ".dart", ".swift"}
+SLASH = {
+    ".rs",
+    ".ts",
+    ".tsx",
+    ".js",
+    ".mjs",
+    ".jsx",
+    ".go",
+    ".java",
+    ".cs",
+    ".dart",
+    ".swift",
+    ".kt",
+    ".kts",
+}
 HASH = {".rb", ".sh", ".toml", ".yml", ".yaml"}
 HASH_NAMES = {"justfile"}
 # Rust lifetimes and char literals make a lone ' common there.
