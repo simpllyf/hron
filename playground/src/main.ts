@@ -132,7 +132,7 @@ function infoRow(text: string, color: string): HTMLLIElement {
   return li;
 }
 
-function renderCron(cron: string | null) {
+function renderCron(cron: string | null, reason = "") {
   copyCron.hidden = !cron;
   cronEl.replaceChildren();
 
@@ -140,21 +140,10 @@ function renderCron(cron: string | null) {
     lastCron = "";
     const wrap = document.createElement("div");
     wrap.className = "cron-unavailable";
-    wrap.append(
-      document.createTextNode("Not expressible as cron."),
-    );
+    wrap.append(document.createTextNode("Not expressible as cron."));
     const why = document.createElement("span");
     why.className = "why";
-    why.append(
-      document.createTextNode(
-        "This schedule uses something the five-field syntax can't represent — an ordinal weekday, a multi-week interval, a yearly date, or a modifier like ",
-      ),
-    );
-    const exceptCode = document.createElement("code");
-    exceptCode.textContent = "except";
-    const untilCode = document.createElement("code");
-    untilCode.textContent = "until";
-    why.append(exceptCode, document.createTextNode(" / "), untilCode, document.createTextNode("."));
+    why.textContent = reason;
     wrap.append(why);
     cronEl.append(wrap);
     return;
@@ -221,8 +210,11 @@ function evaluate(input: string) {
 
   try {
     renderCron(currentSchedule.toCron());
-  } catch {
-    renderCron(null);
+  } catch (e) {
+    // hron's message says why, as "not expressible as cron: <reason>".
+    const message = e instanceof Error ? e.message : String(e);
+    const reason = message.replace(/^not expressible as cron: /, "");
+    renderCron(null, reason.charAt(0).toUpperCase() + reason.slice(1) + ".");
   }
 
   shownCount = 0;

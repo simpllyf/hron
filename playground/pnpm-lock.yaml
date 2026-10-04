@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       hron-wasm:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.1.0
+        version: 2.1.0
     devDependencies:
       typescript:
         specifier: ^5.9.3
@@ -556,8 +556,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  hron-wasm@2.0.0:
-    resolution: {integrity: sha512-o7MsCwD1zpywr4IiJ6G0yPno/d+zFs2waOfKHPlord+NWfLEuTXtKdMXRch4DeGAGs1FYei3yZslZsVGx+WB/g==}
+  hron-wasm@2.1.0:
+    resolution: {integrity: sha512-GucbjsgP1FNfXlf+gsOKtZahynbklA4hk1tYvs1FvqtVwhdDRZsSB3AyYq0EVuivHOaCHT9XN0D9IkEbtJG8/Q==}
 
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
@@ -1126,7 +1126,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  hron-wasm@2.0.0: {}
+  hron-wasm@2.1.0: {}
 
   kleur@4.1.5: {}
 
