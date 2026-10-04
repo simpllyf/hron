@@ -2,4 +2,4 @@ package hron
 
 // Version is the current version of the hron Go package.
 // This is automatically updated by `just stamp-versions`.
-const Version = "2.1.0"
+const Version = "2.2.0"
