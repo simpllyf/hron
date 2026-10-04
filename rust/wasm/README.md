@@ -10,6 +10,8 @@ For a native TypeScript implementation (no WASM), see [`hron-ts`](https://github
 npm install hron-wasm
 ```
 
+The package imports its `.wasm` file as a module, so it needs a bundler that supports that, such as Vite with [vite-plugin-wasm](https://github.com/Menci/vite-plugin-wasm) or webpack 5 with `experiments.asyncWebAssembly`. For Cloudflare Workers, Wrangler picks the package's Workers entry through its `workerd` export condition.
+
 ## Usage
 
 ```javascript
