@@ -1,6 +1,10 @@
 # Changelog
 
-Current version: 2.2.0
+Current version: 2.2.1
+
+## 2.2.1
+
+- No changes to the Dart package. hron's packages share one version, and 2.2.1 fixes the WebAssembly package.
 
 ## 2.2.0
 
