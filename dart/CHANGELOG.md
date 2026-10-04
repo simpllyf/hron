@@ -1,6 +1,10 @@
 # Changelog
 
-Current version: 2.0.0
+Current version: 2.1.0
+
+## 2.1.0
+
+- No changes to the Dart package. hron's packages share one version, and 2.1.0 adds the Kotlin package.
 
 ## 2.0.0
 

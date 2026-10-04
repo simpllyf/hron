@@ -310,6 +310,8 @@ stamp-versions:
     cd ruby && bundle lock
     # Kotlin
     sed -i 's/^version=.*/version={{version}}/' kotlin/gradle.properties
+    sed -i 's/io.hron:hron-kotlin:[^"]*"/io.hron:hron-kotlin:{{version}}"/' kotlin/README.md
+    sed -i 's/<version>[^<]*<\/version>/<version>{{version}}<\/version>/' kotlin/README.md
     # Spec files
     sed -i 's/"version": "[^"]*"/"version": "{{version}}"/' spec/api.json
     sed -i 's/"version": "[^"]*"/"version": "{{version}}"/' spec/tests.json
