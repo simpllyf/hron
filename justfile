@@ -259,10 +259,17 @@ build-kotlin:
 build-wasm:
     cd rust/wasm && cargo build --target wasm32-unknown-unknown
 
-# WASM tests (build + run JS tests)
-test-wasm:
+# Build the hron-wasm npm package in rust/wasm/pkg. wasm-pack writes no "exports",
+# and Cloudflare Workers need their own entry, chosen by the "workerd" condition.
+# "./*" keeps every file importable by path, as it is without "exports".
+pack-wasm:
     cd rust/wasm && wasm-pack build --release
-    cp rust/wasm/hron_wasm_entry.js rust/wasm/pkg/hron_wasm.js
+    cp rust/wasm/hron_wasm_workerd.js rust/wasm/pkg/
+    jq '.files += ["hron_wasm_workerd.js"] | .sideEffects += ["./hron_wasm_workerd.js"] | .exports = {".": {"types": "./hron_wasm.d.ts", "workerd": "./hron_wasm_workerd.js", "default": "./hron_wasm.js"}, "./*": "./*"}' rust/wasm/pkg/package.json > rust/wasm/pkg/package.json.new
+    mv rust/wasm/pkg/package.json.new rust/wasm/pkg/package.json
+
+# WASM tests (build + run JS tests)
+test-wasm: pack-wasm
     cd rust/wasm/test && pnpm install --frozen-lockfile && pnpm test
 
 # Print all component versions (for CI validation and local checks)
@@ -403,9 +410,7 @@ publish-ts:
     cd ts && pnpm install --frozen-lockfile && pnpm build && pnpm publish --access public --no-git-checks
 
 # Build and publish WASM package to npm
-publish-wasm:
-    cd rust/wasm && wasm-pack build --release
-    cp rust/wasm/hron_wasm_entry.js rust/wasm/pkg/hron_wasm.js
+publish-wasm: pack-wasm
     cd rust/wasm/pkg && npm publish --access public
 
 # Publish Java package to Maven Central

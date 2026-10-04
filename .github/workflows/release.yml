@@ -189,7 +189,7 @@ jobs:
 
       - uses: jdx/mise-action@v5
         with:
-          install_args: rust
+          install_args: rust just
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
@@ -200,11 +200,7 @@ jobs:
         run: cargo install wasm-pack --locked
 
       - name: Build WASM package
-        run: wasm-pack build --release
-        working-directory: rust/wasm
-
-      - name: Patch entry point for Cloudflare Workers compatibility
-        run: cp rust/wasm/hron_wasm_entry.js rust/wasm/pkg/hron_wasm.js
+        run: just pack-wasm
 
       - name: Publish to npm
         run: |
