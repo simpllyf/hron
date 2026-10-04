@@ -2,6 +2,10 @@
 
 Current version: 2.2.0
 
+## 2.2.0
+
+- No changes to the Dart package. hron's packages share one version, and 2.2.0 changes the TypeScript package.
+
 ## 2.1.0
 
 - No changes to the Dart package. hron's packages share one version, and 2.1.0 adds the Kotlin package.
