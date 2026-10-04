@@ -1,7 +1,7 @@
 version := `cat VERSION`
 
 # Run all tests
-test-all: test-rust test-ts test-dart test-python test-wasm test-go test-java test-csharp test-ruby test-swift
+test-all: test-rust test-ts test-dart test-python test-wasm test-go test-java test-csharp test-ruby test-swift test-kotlin
 
 # Rust tests
 test-rust:
@@ -38,6 +38,31 @@ test-ruby:
 # Swift tests
 test-swift:
     swift test
+
+# Kotlin tests
+test-kotlin:
+    cd kotlin && ./gradlew test
+
+# Kotlin tests on JDK 17, the oldest the bytecode targets: pass its home, as `mise where java@temurin-17` prints it
+test-kotlin-17 jdk17:
+    cd kotlin && ./gradlew test -Phron.testJdk=17 -Dorg.gradle.java.installations.paths={{jdk17}}
+
+# The spec's cases on a running Android emulator or device, with its own java.time and tz data
+test-kotlin-android:
+    cd kotlin && ./gradlew -Phron.android=true :android-test:connectedDebugAndroidTest
+
+# The oldest Kotlin an app can use hron with, as kotlin/hron/build.gradle.kts sets its language version
+kotlin_client := "2.2.21"
+
+# A client built with the oldest Kotlin hron supports, against the jar
+check-kotlin-client:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd kotlin
+    ./gradlew --quiet :hron:jar
+    jar="hron/build/libs/hron-$(sed -n 's/^version=//p' gradle.properties).jar"
+    mise exec kotlin@{{kotlin_client}} -- kotlinc -Werror -cp "$jar" client-check/Client.kt -include-runtime -d build/client-check/client.jar
+    java -cp "build/client-check/client.jar:$jar" ClientKt
 
 # The Swift SDK for WebAssembly must match the toolchain in .tool-versions exactly
 swift_wasm_sdk := "swift-6.4.0-RELEASE_wasm"
@@ -77,7 +102,7 @@ diff *args:
     python3 tools/differential/diff.py "$@"
 
 # Install dependencies for all languages
-setup: setup-rust setup-ts setup-python setup-go setup-ruby setup-dart setup-csharp setup-java setup-swift
+setup: setup-rust setup-ts setup-python setup-go setup-ruby setup-dart setup-csharp setup-java setup-swift setup-kotlin
 
 setup-rust:
     rustup component add rustfmt clippy
@@ -106,14 +131,17 @@ setup-java:
 setup-swift:
     swift package resolve
 
+setup-kotlin:
+    cd kotlin && ./gradlew --quiet :hron:testClasses
+
 setup-swift-32:
     swift sdk list | grep -qx {{swift_wasm_sdk}} || swift sdk install https://download.swift.org/swift-6.4.0-release/wasm-sdk/swift-6.4.0-RELEASE/{{swift_wasm_sdk}}.artifactbundle.tar.gz --checksum f07b7be3c586d92d7a07051fc6d303b87ebea67eadc40640ba59d5a8b79aa86d
 
 # Format all
-fmt: fmt-rust fmt-ts fmt-python fmt-go fmt-ruby fmt-dart fmt-csharp fmt-java fmt-swift
+fmt: fmt-rust fmt-ts fmt-python fmt-go fmt-ruby fmt-dart fmt-csharp fmt-java fmt-swift fmt-kotlin
 
 # Lint/check all (CI-safe, no auto-fix)
-lint: lint-rust lint-ts lint-python lint-go lint-ruby lint-dart lint-csharp lint-java lint-swift lint-tools
+lint: lint-rust lint-ts lint-python lint-go lint-ruby lint-dart lint-csharp lint-java lint-swift lint-kotlin lint-tools
 
 fmt-rust:
     cd rust && cargo fmt --all
@@ -141,6 +169,9 @@ fmt-java:
 
 fmt-swift:
     swift format format --in-place --recursive Package.swift swift tools/differential/runners/swift
+
+fmt-kotlin:
+    cd kotlin && ./gradlew -Phron.differential=true spotlessApply
 
 lint-rust:
     cd rust && cargo fmt --all --check
@@ -183,6 +214,10 @@ lint-swift:
     swift format lint --strict --recursive Package.swift swift tools/differential/runners/swift
     swift build -Xswiftc -warnings-as-errors
 
+# Formatting, warnings (as errors) and the public API against kotlin/hron/api/hron.api
+lint-kotlin:
+    cd kotlin && ./gradlew -Phron.differential=true spotlessCheck checkKotlinAbi compileTestKotlin
+
 # List the comment lines this branch adds, so each gets a reason or goes (AGENTS.md, "Comments")
 comments base="main":
     python3 tools/comments.py {{base}}
@@ -216,6 +251,10 @@ build-csharp:
 build-swift:
     swift build
 
+# Kotlin build
+build-kotlin:
+    cd kotlin && ./gradlew assemble
+
 # WASM build
 build-wasm:
     cd rust/wasm && cargo build --target wasm32-unknown-unknown
@@ -240,6 +279,7 @@ versions:
     echo "java=$(mvn -f java/pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout)"
     echo "csharp=$(grep '<Version>' csharp/Hron/Hron.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/')"
     echo "ruby=$(ruby -r ./ruby/lib/hron/version.rb -e 'puts Hron::VERSION')"
+    echo "kotlin=$(sed -n 's/^version=//p' kotlin/gradle.properties)"
     # No Swift line: SwiftPM takes a package's version from the git tag, so there is none to check against it
 
 # Stamp VERSION into all package manifests and regenerate lockfiles
@@ -268,6 +308,8 @@ stamp-versions:
     # Ruby
     sed -i 's/VERSION = "[^"]*"/VERSION = "{{version}}"/' ruby/lib/hron/version.rb
     cd ruby && bundle lock
+    # Kotlin
+    sed -i 's/^version=.*/version={{version}}/' kotlin/gradle.properties
     # Spec files
     sed -i 's/"version": "[^"]*"/"version": "{{version}}"/' spec/api.json
     sed -i 's/"version": "[^"]*"/"version": "{{version}}"/' spec/tests.json
@@ -367,6 +409,10 @@ publish-wasm:
 # Publish Java package to Maven Central
 publish-java:
     cd java && mvn deploy -P release
+
+# Publish Kotlin package to Maven Central (needs the Central and signing Gradle properties)
+publish-kotlin:
+    cd kotlin && ./gradlew :hron:publishToMavenCentral
 
 # Publish C# package to NuGet
 publish-csharp:

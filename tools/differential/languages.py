@@ -66,6 +66,11 @@ LANGUAGES = {
                 "--scratch-path", f"{BUILD}/swift"]],
         run=[f"{BUILD}/swift/release/hron-differential"],
     ),
+    "kotlin": Language(
+        build=[["kotlin/gradlew", "-p", "kotlin", "--quiet", "-Phron.differential=true",
+                ":differential:installDist"]],
+        run=[f"{BUILD}/kotlin/bin/differential"],
+    ),
 }  # fmt: skip
 
 

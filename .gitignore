@@ -43,6 +43,12 @@ dart/pubspec.lock
 .build/
 .swiftpm/
 
+# Kotlin
+kotlin/.gradle/
+kotlin/.kotlin/
+kotlin/**/build/
+kotlin/local.properties
+
 # OS
 .DS_Store
 .secrets/

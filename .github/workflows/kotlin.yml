@@ -1,0 +1,154 @@
+name: Kotlin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "kotlin/**"
+      - "tools/differential/runners/kotlin/**"
+      - "spec/**"
+      - "justfile"
+      - ".tool-versions"
+      - ".mise.toml"
+      - ".github/workflows/kotlin.yml"
+  pull_request:
+    paths:
+      - "kotlin/**"
+      - "tools/differential/runners/kotlin/**"
+      - "spec/**"
+      - "justfile"
+      - ".tool-versions"
+      - ".mise.toml"
+      - ".github/workflows/kotlin.yml"
+
+jobs:
+  check:
+    name: Format & Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: java just
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          # The MIT-licensed caching; the default "enhanced" one is proprietary.
+          cache-provider: basic
+      - name: Format & Lint
+        run: just lint-kotlin
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: java just
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+      - name: Build
+        run: just build-kotlin
+      - name: Test
+        run: just test-kotlin
+      - name: Build release artifacts (unsigned)
+        run: ./gradlew :hron:publishToMavenLocal
+        working-directory: kotlin
+
+  # The bytecode targets JDK 17, so the tests also run there.
+  jdk17:
+    name: Test (JDK 17)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: java java@temurin-17 just
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+      - name: Test
+        run: just test-kotlin-17 "$(mise where java@temurin-17)"
+
+  # The oldest Kotlin an app can use hron with: a client built with it against the jar.
+  client:
+    name: Kotlin 2.2 client
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: java just
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+      - name: Build and run the client
+        run: just check-kotlin-client
+
+  # Android's own java.time and tz data, at Android 12 (API 31), the oldest hron supports, and at
+  # the newest. The SDK's own tools boot the emulator, so no emulator action is needed.
+  android:
+    name: Android (API ${{ matrix.api-level }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: ["31", "37.0"]
+    env:
+      IMAGE: system-images;android-${{ matrix.api-level }};google_apis;x86_64
+      # The image's own command-line tools predate API 37, and an AVD their avdmanager makes for it
+      # never boots.
+      CMDLINE_TOOLS: "23.0"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: java just
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+      # The runner image ships the Android SDK and its command-line tools, so no setup action.
+      - name: Accept the Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+      - name: Install the emulator and its system image
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "cmdline-tools;$CMDLINE_TOOLS" "platform-tools" "emulator" "platforms;android-37.0" "$IMAGE"
+      - name: Boot the emulator and test
+        run: |
+          # The runner's avdmanager and a newer emulator look for AVDs in different places by default.
+          export ANDROID_AVD_HOME="$RUNNER_TEMP/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          echo no | "$ANDROID_HOME/cmdline-tools/$CMDLINE_TOOLS/bin/avdmanager" create avd --name hron --package "$IMAGE" --force
+          "$ANDROID_HOME/emulator/emulator" -avd hron -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect &
+          emulator=$!
+          adb="$ANDROID_HOME/platform-tools/adb"
+          started=$SECONDS
+          until [ "$(timeout 10 "$adb" shell getprop sys.boot_completed 2> /dev/null | tr -d '\r')" = 1 ]; do
+            if ! kill -0 "$emulator" 2> /dev/null; then
+              echo "the emulator exited before it booted" >&2
+              exit 1
+            fi
+            if [ $((SECONDS - started)) -gt 600 ]; then
+              echo "the emulator did not finish booting in 10 minutes" >&2
+              exit 1
+            fi
+            sleep 2
+          done
+          echo "booted in $((SECONDS - started))s, tz data $("$adb" shell cat /apex/com.android.tzdata/etc/tz/tz_version)"
+          just test-kotlin-android
+      - name: Show the failing cases
+        if: failure()
+        run: |
+          find kotlin/android-test/build/outputs/androidTest-results -name '*.xml' \
+            -exec grep -h -A3 '<failure' {} + | head -200
