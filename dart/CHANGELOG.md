@@ -2,6 +2,10 @@
 
 Current version: 2.1.0
 
+## 2.1.0
+
+- No changes to the Dart package. hron's packages share one version, and 2.1.0 adds the Kotlin package.
+
 ## 2.0.0
 
 - Breaking: `package:hron/hron.dart` no longer exports `ScheduleData` or the helpers `expandDaySpec`, `expandMonthTarget` and `ordinalSuffix`, and `Weekday.tryParse`, `Weekday.fromNumber` and `MonthName.tryParse` are removed. No public method accepted them; build a schedule with `Schedule.parse` or `Schedule.fromCron`.
