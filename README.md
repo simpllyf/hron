@@ -51,6 +51,7 @@ See [`hron-cli`](rust/hron-cli/) for all options.
 | C# | [`Hron`](csharp/Hron/) | [![NuGet](https://img.shields.io/nuget/v/Hron)](https://www.nuget.org/packages/Hron) |
 | Ruby | [`hron`](ruby/) | [![Gem Version](https://img.shields.io/gem/v/hron)](https://rubygems.org/gems/hron) |
 | Swift | [`Hron`](swift/) | [![Swift Package Index](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fsimpllyf%2Fhron%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/simpllyf/hron) |
+| Kotlin | [`hron-kotlin`](kotlin/) | [![Maven Central](https://img.shields.io/maven-central/v/io.hron/hron-kotlin)](https://central.sonatype.com/artifact/io.hron/hron-kotlin) |
 
 > **Note:** The JS/TS native package (`hron-ts`) uses the [Temporal API](https://tc39.es/proposal-temporal/) via polyfill. Once Temporal ships natively in runtimes, performance improves automatically. For performance-critical JS/TS use cases, consider the WASM package (`hron-wasm`).
 
@@ -77,6 +78,8 @@ go get github.com/simpllyf/hron/go/v2
 
 # Java (Maven) — add io.hron:hron to pom.xml (see badge above for latest version)
 
+# Kotlin (Gradle) — add io.hron:hron-kotlin to your dependencies (see badge above for latest version)
+
 # C# / .NET
 dotnet add package Hron
 
@@ -95,7 +98,7 @@ targets: [
 ]
 ```
 
-See language-specific READMEs for API docs and examples: [Rust](rust/hron/) · [TypeScript](ts/) · [Dart](dart/) · [Python](python/) · [Go](go/) · [Java](java/) · [C#](csharp/Hron/) · [Ruby](ruby/) · [Swift](swift/) · [WASM](rust/wasm/)
+See language-specific READMEs for API docs and examples: [Rust](rust/hron/) · [TypeScript](ts/) · [Dart](dart/) · [Python](python/) · [Go](go/) · [Java](java/) · [C#](csharp/Hron/) · [Ruby](ruby/) · [Swift](swift/) · [Kotlin](kotlin/) · [WASM](rust/wasm/)
 
 ## Expression Syntax
 
@@ -216,7 +219,7 @@ When a schedule specifies a timezone via the `in` clause, all occurrences are co
 - **Fall-back (ambiguity):** If a scheduled time is ambiguous (e.g. `1:30 AM` occurs twice during fall-back), the first (pre-transition) occurrence is used.
 - **No timezone:** When no `in` clause is specified, UTC is used for deterministic, portable behavior.
 
-All implementations (Rust, TypeScript, Dart, Python, Go, Java, C#, Ruby, Swift, WASM) follow these same DST semantics.
+All implementations (Rust, TypeScript, Dart, Python, Go, Java, C#, Ruby, Swift, Kotlin, WASM) follow these same DST semantics.
 
 The [conformance test suite](spec/tests.json) includes explicit spring-forward and fall-back test cases to verify this behavior across all implementations.
 
@@ -239,6 +242,7 @@ just test-java       # Run Java tests only
 just test-csharp     # Run C# tests only
 just test-ruby       # Run Ruby tests only
 just test-swift      # Run Swift tests only
+just test-kotlin     # Run Kotlin tests only
 just build-wasm      # Build WASM package
 just bench           # Run Criterion benchmarks (Rust)
 just fuzz            # Run fuzz targets (requires nightly, default 3 min)

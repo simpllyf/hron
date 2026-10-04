@@ -21,6 +21,7 @@ csharp/           # Native C# implementation
 ruby/             # Native Ruby implementation
 swift/            # Native Swift implementation
 Package.swift     # Swift package manifest, at the root because SwiftPM reads a git package's manifest only from there
+kotlin/           # Native Kotlin implementation (JVM and Android)
 ```
 
 ## Code Style
@@ -73,7 +74,7 @@ Tool directives (`# frozen_string_literal`, `// biome-ignore`, `# noqa` and the 
 3. Add `just test-<lang>` target, add to `test-all`
 4. Add `.github/workflows/<lang>.yml` (use `jdx/mise-action` with `install_args`)
 5. Add conformance job to `.github/workflows/spec.yml`
-6. Pin language version in `.tool-versions`
+6. Pin language version in `.tool-versions`, or in the build files for a compiler the build tool fetches itself (Kotlin's, in `kotlin/gradle/libs.versions.toml`)
 7. Update packages table in `README.md`
 
 ## Versioning
@@ -106,6 +107,9 @@ just test-ruby        # Ruby only
 just test-swift       # Swift only
 just test-swift-32    # Swift with a 32-bit Int (wasm32; run just setup-swift-32 once)
 just check-swift-client # Swift enums that may gain cases need @unknown default in clients
+just test-kotlin      # Kotlin only
+just test-kotlin-android # Kotlin on a running Android emulator or device
+just check-kotlin-client # A client built with Kotlin 2.2, the oldest supported
 just build-wasm       # WASM target
 just lint             # Lint all languages
 just fmt              # Format all languages

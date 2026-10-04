@@ -17,6 +17,7 @@ Thanks for your interest in contributing to hron! This document covers everythin
   - Ruby 4.0+
   - .NET 10.0+
   - Swift 6.4+
+  - Kotlin: the JDK above; Gradle and the Kotlin compiler come from `kotlin/gradlew`. The Android tests also need the Android SDK and an emulator or device.
 
 On a Debian-family distro other than Ubuntu, such as Pop!_OS, mise needs to be told which Swift build to install. Set it in your own mise config (`~/.config/mise/config.toml`), not the repo's:
 
@@ -45,6 +46,10 @@ mise exec -- just test-ruby
 mise exec -- just test-swift
 mise exec -- just test-swift-32   # after `just setup-swift-32`: Swift with a 32-bit Int, as on older Apple Watches
 mise exec -- just check-swift-client
+mise exec -- just test-kotlin
+mise exec -- just test-kotlin-android   # with an emulator or device running
+mise exec -- just test-kotlin-17 "$(mise where java@temurin-17)"   # after `mise install java@temurin-17`
+mise exec -- just check-kotlin-client
 ```
 
 If you have mise activated in your shell (via `mise activate bash/zsh`), you can omit the `mise exec --` prefix.
@@ -67,6 +72,7 @@ hron/
 ├── ruby/           # Ruby: native implementation
 ├── swift/          # Swift: native implementation
 ├── Package.swift   # Swift package manifest (SwiftPM needs it at the root)
+├── kotlin/         # Kotlin: native implementation (Gradle build, with Android tests)
 ├── justfile        # Build/test commands
 └── VERSION         # Single source of truth for version
 ```
@@ -111,6 +117,7 @@ Test cases in `spec/tests.json` are the source of truth. When adding tests:
 - **C#**: `dotnet format`
 - **Ruby**: `standard`
 - **Swift**: `swift format lint --strict`
+- **Kotlin**: ktfmt (kotlinlang style) through Spotless, warnings as errors, and the public API in `kotlin/hron/api/hron.api`
 
 CI enforces all of these. Run them locally before pushing.
 
