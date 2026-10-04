@@ -10,7 +10,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("io.hron:hron-kotlin:2.2.0")
+    implementation("io.hron:hron-kotlin:2.2.1")
 }
 ```
 
@@ -20,7 +20,7 @@ Maven:
 <dependency>
     <groupId>io.hron</groupId>
     <artifactId>hron-kotlin</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
