@@ -2,4 +2,4 @@ allowBuilds:
   esbuild: false
   workerd: false
 minimumReleaseAgeExclude:
-  - hron-wasm@2.2.0
+  - hron-wasm@2.2.1
