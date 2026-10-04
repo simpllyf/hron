@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "description": "A published package's minimum Python is a promise to its users: it moves only when we drop a version, never in a dependency update",
+      "matchManagers": ["pep621"],
+      "matchDepTypes": ["requires-python"],
+      "enabled": false
+    },
+    {
+      "description": "The same for the go directive in go.mod, the Go module's minimum Go",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "enabled": false
+    },
+    {
+      "description": "The same for the SDK constraint in pubspec.yaml, the Dart package's minimum Dart",
+      "matchManagers": ["pub"],
+      "matchDatasources": ["dart-version", "flutter-version"],
+      "enabled": false
+    }
+  ]
+}
