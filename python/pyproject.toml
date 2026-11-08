@@ -17,18 +17,18 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-dependencies = ["tzdata>=2024.1"]
+dependencies = ["tzdata>=2026.6"]
 
 [project.urls]
 Homepage = "https://github.com/simpllyf/hron"
 Repository = "https://github.com/simpllyf/hron"
 
 [build-system]
-requires = ["uv_build>=0.12.21,<0.13"]
+requires = ["uv_build>=0.13.6,<0.14"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = ["pytest>=9.1", "ruff>=0.16", "ty==0.0.84"]
+dev = ["pytest>=9.2.0", "ruff>=0.17.3", "ty==0.0.95"]
 
 [tool.uv]
 # Seven-day supply-chain buffer: resolve nothing published in the last week (depbot policy).

@@ -23,12 +23,12 @@
     "lint:fix": "biome check --write src/ test/"
   },
   "dependencies": {
-    "temporal-polyfill": "^1.0.5"
+    "temporal-polyfill": "^1.0.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.14",
+    "@biomejs/biome": "^2.6.4",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.5"
   },
   "license": "MIT",
   "repository": {
