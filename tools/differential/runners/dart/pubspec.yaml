@@ -7,4 +7,4 @@ environment:
 dependencies:
   hron:
     path: ../../../../dart
-  timezone: ^0.11.0
+  timezone: ^0.11.2
