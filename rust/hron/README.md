@@ -69,6 +69,8 @@ Evaluating a schedule never fails, so these return no `Result`:
 
 Every returned `Zoned` is in the schedule's timezone, or UTC when it has none.
 
+Which timezone names are accepted follows the tz database `jiff` finds on the host. Link names such as `US/Eastern` need the host to have them; Ubuntu 26.04 keeps them in the `tzdata-legacy` package.
+
 ```rust
 use hron::Schedule;
 use jiff::Zoned;
