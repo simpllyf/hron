@@ -28,6 +28,8 @@ jobs:
       - uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         with:
           install_args: rust
+      - name: Install the tz link names (US/Eastern and the like), which ubuntu-26.04 leaves out
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tzdata-legacy
       - run: cargo test --workspace --all-features
         working-directory: rust
 
@@ -111,6 +113,8 @@ jobs:
       - uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         with:
           install_args: dotnet just
+      - name: Install the tz link names (US/Eastern and the like), which ubuntu-26.04 leaves out
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tzdata-legacy
       - run: just build-csharp
       - run: just test-csharp
 
@@ -123,6 +127,8 @@ jobs:
       - uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
         with:
           install_args: ruby just
+      - name: Install the tz link names (US/Eastern and the like), which ubuntu-26.04 leaves out
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tzdata-legacy
       - run: just test-ruby
 
   swift:

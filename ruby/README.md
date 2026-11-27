@@ -124,6 +124,8 @@ Each getter returns one part of the schedule, with the classes under [Building a
 | `schedule.starting` | The `starting` date as a `"YYYY-MM-DD"` `String`, or `nil`. |
 | `schedule.during` | An `Array` of month `Symbol`s in the order written; empty without a `during` clause. |
 
+Which timezone names are accepted follows the tz database `tzinfo` loads: the `tzinfo-data` gem if your app has it, otherwise the host's zoneinfo. Link names such as `US/Eastern` need that database to have them; Ubuntu 26.04 keeps them in the `tzdata-legacy` package.
+
 ```ruby
 schedule = Hron::Schedule.parse("every weekday at 9:00 except dec 25 starting 2026-01-05 during jan, feb")
 schedule.expression  # #<data Hron::DayRepeat interval=1, days=#<data Hron::DayFilterWeekday>, times=[#<data Hron::TimeOfDay hour=9, minute=0>]>

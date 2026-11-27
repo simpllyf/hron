@@ -8224,8 +8224,8 @@
         {
           "name": "dst_fall_back_havana_second_pass",
           "expression": "every day at 00:30 in America/Havana",
-          "description": "Havana: the repeated 00:30 -05:00 on Nov 1 is not an occurrence",
-          "datetime": "2026-11-01T00:30:00-05:00[America/Havana]",
+          "description": "Havana: the repeated 00:30 -05:00 on Nov 2, 2025 is not an occurrence (a past year, as Cuba's later rules have changed)",
+          "datetime": "2025-11-02T00:30:00-05:00[America/Havana]",
           "expected": false
         },
         {
@@ -9141,11 +9141,11 @@
         {
           "name": "havana_midnight_overlap",
           "expression": "every day at 00:30 in America/Havana",
-          "description": "Havana falls back 01:00 -> 00:00 on Nov 1; 00:30 resolves to the first pass (-04:00)",
-          "now": "2026-10-31T12:00:00-04:00[America/Havana]",
+          "description": "Havana fell back 01:00 -> 00:00 on Nov 2, 2025; 00:30 resolves to the first pass (-04:00) (a past year, as Cuba's later rules have changed)",
+          "now": "2025-11-01T12:00:00-04:00[America/Havana]",
           "next_n": [
-            "2026-11-01T00:30:00-04:00[America/Havana]",
-            "2026-11-02T00:30:00-05:00[America/Havana]"
+            "2025-11-02T00:30:00-04:00[America/Havana]",
+            "2025-11-03T00:30:00-05:00[America/Havana]"
           ]
         },
         {
