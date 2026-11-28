@@ -17,7 +17,7 @@ path = "src/main.rs"
 [dependencies]
 hron = { path = "../hron", version = "2.2.1" }
 clap = { version = "4", features = ["derive"] }
-jiff = "1.0"
+jiff = "0.2"
 serde_json = "1"
 
 [dev-dependencies]

@@ -18,6 +18,18 @@
       "matchManagers": ["pub"],
       "matchDatasources": ["dart-version", "flutter-version"],
       "enabled": false
+    },
+    {
+      "description": "hold until 2026-12-26: hron's public API takes jiff::Zoned, which jiff 1.0 renames, so moving to it breaks hron's users; owner decides when hron takes it",
+      "matchPackageNames": ["jiff"],
+      "allowedVersions": "<1"
+    },
+    {
+      "description": "hold until 2026-12-26: the Swift 6.0 job stays on ubuntu-24.04, as Swift 6.0.3 needs libxml2.so.2, which ubuntu-26.04 does not ship",
+      "matchDatasources": ["github-runners"],
+      "matchPackageNames": ["ubuntu"],
+      "matchFileNames": [".github/workflows/swift.yml"],
+      "allowedVersions": "<26.04"
     }
   ]
 }
