@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 hron = { path = "../../../../rust/hron" }
-jiff = "0.2"
+jiff = "1.0"
 serde_json = "1"
 
 # Overflow panics are reported as crashes instead of wrapping silently.
